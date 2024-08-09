@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import PilihanPage from './page/PilihanPage';
+import KelompokSiswaPage from './page/KelompokSiswaPage';
+import PilihanGandaPage from './page/PilihanGandaPage';
+import TanyaJawabEssay from './page/Essay';
+import PilihTipeSoal from './page/PilihTipeSoal';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<PilihanPage />} />
+        <Route path="/kelompok-siswa" element={<KelompokSiswaPage />} />
+        <Route path="/tipe-soal" element={<PilihTipeSoal />} />
+        <Route path="/pilihan-ganda" element={<PilihanGandaPage />} />
+        <Route path="/tanya-jawab-essay" element={<TanyaJawabEssay />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
