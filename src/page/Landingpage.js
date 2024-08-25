@@ -14,7 +14,8 @@ function LandingPage() {
       navigate('/dashboard', { state: { username: username, role: 'guru' } });
       // Set role and redirect if needed
     } else {
-      navigate('/tipe-soal', { state: { username: username } });
+      navigate('/petunjuk');
+      // navigate('/tipe-soal', { state: { username: username } });
         
     }
   };

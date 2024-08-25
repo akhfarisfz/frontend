@@ -7,6 +7,7 @@ import TanyaJawabEssay from './page/Essay';
 import TambahMenu from './page/guru/TambahMenu';
 import PilihTipeSoal from './page/PilihTipeSoal';
 import Landingpage from './page/Landingpage';
+import ContentPage from './page/contents/ContentPage';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Landingpage />} />
         <Route path="/dashboard" element={<DashboardGuru />} />
+        <Route path="/petunjuk" element={<ContentPage />} />
         <Route path="/menusoal" element={<TambahMenu />} />
         <Route path="/tipe-soal" element={<PilihTipeSoal />} />
         <Route path="/pilihan-ganda" element={<PilihanGandaPage />} />
