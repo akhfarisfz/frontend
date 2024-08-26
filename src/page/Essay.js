@@ -1,24 +1,71 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import stringSimilarity from 'string-similarity';
+import axios from 'axios';
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:4000'); // Connect to the server
 
 const Essay = () => {
-  const [question] = useState('Apa yang dimaksud dengan ekosistem?');
-  const [correctAnswer] = useState('Ekosistem adalah sistem yang terdiri dari makhluk hidup dan lingkungan sekitarnya yang saling berinteraksi.');
+  const [question, setQuestion] = useState('');
+  const [correctAnswer, setCorrectAnswer] = useState('');
   const [userAnswer, setUserAnswer] = useState('');
   const [answers, setAnswers] = useState([]);
   const [sortedAnswers, setSortedAnswers] = useState([]);
   const [showAnswerKey, setShowAnswerKey] = useState(false);
   const [showForm, setShowForm] = useState(true);
+  const [studentName, setStudentName] = useState('');
+  const [essayId, setEssayId] = useState('');
+  const { id } = useParams(); // Get student ID from URL params
   const navigate = useNavigate();
 
-  // Fungsi untuk menangani perubahan input
+  useEffect(() => {
+    const fetchEssayData = async () => {
+      try {
+        // Fetch essay data
+        const response = await axios.get('http://localhost:4000/api/essay');
+        if (response.data && response.data.length > 0) {
+          const essayData = response.data[0];
+          setQuestion(essayData.soal);
+          setCorrectAnswer(essayData.kunci);
+          setEssayId(essayData._id);
+
+          // Fetch student name and answers
+          if (id) {
+            const studentResponse = await axios.get(`http://localhost:4000/api/siswa/${id}`);
+            if (studentResponse.data) {
+              setStudentName(studentResponse.data.namaSiswa);
+              setAnswers(studentResponse.data.essay || []);
+            }
+          }
+        } else {
+          console.warn('No data found');
+        }
+      } catch (error) {
+        console.error('Error fetching essay data:', error);
+      }
+    };
+
+    fetchEssayData();
+
+    // Listen for answer submissions
+    socket.on('answerSubmitted', (data) => {
+      if (data.soal === essayId) {
+        setAnswers(prevAnswers => [...prevAnswers, { ...data, namaSiswa: data.namaSiswa }]);
+      }
+    });
+
+    // Clean up on component unmount
+    return () => {
+      socket.off('answerSubmitted');
+    };
+  }, [id, essayId]);
+
   const handleChange = (e) => {
     setUserAnswer(e.target.value);
-  }
+  };
 
-  // Fungsi untuk menangani submit
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (userAnswer.trim() === '') return;
 
@@ -26,29 +73,56 @@ const Essay = () => {
     const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
     const position = getRandomPosition();
 
-    setAnswers([...answers, { text: userAnswer, similarity, color, position }]);
+    const newAnswer = { text: userAnswer, similarity, color, position, namaSiswa: studentName };
+    setAnswers([...answers, newAnswer]);
     setUserAnswer('');
+
+    // Post user answer to the API
+    try {
+      await axios.post('http://localhost:4000/api/siswa', {
+        namaSiswa: studentName,
+        essay: [{ jawabanSiswa: userAnswer, skorEssay: similarity, soal: essayId }]
+      });
+
+      // Emit answer submission event
+      socket.emit('submitAnswer', { text: userAnswer, similarity, color, position, soal: essayId, namaSiswa: studentName });
+    } catch (error) {
+      console.error('Error posting user answer:', error);
+    }
   };
 
-  // Fungsi untuk menentukan posisi acak
+  const handleShowAnswerKey = async () => {
+    setShowAnswerKey(true);
+    setShowForm(false);
+    setSortedAnswers(
+      answers.sort((a, b) => b.similarity - a.similarity) // Sort by similarity
+    );
+  
+    // Update answers in the API
+    try {
+      await axios.put(`http://localhost:4000/api/siswa/${id}`, {
+        essay: answers.map(answer => ({
+          jawabanSiswa: answer.text,
+          skorEssay: answer.similarity,
+          soal: essayId
+        }))
+      });
+      console.log('Answers updated successfully');
+    } catch (error) {
+      console.error('Error updating student answers:', error);
+    }
+  };
+  
+
+
   const getRandomPosition = () => {
-    const maxTop = 80; // Maksimal posisi vertikal
-    const maxLeft = 30; // Maksimal posisi horizontal dari kiri
+    const maxTop = 80; // Max vertical position
+    const maxLeft = 30; // Max horizontal position from left
 
     const left = Math.random() > 0.5 ? `${Math.random() * maxLeft}%` : `calc(100% - ${Math.random() * maxLeft}%)`;
     const top = `${Math.random() * maxTop}%`;
 
     return { top, left };
-  };
-
-  // Fungsi untuk menampilkan kunci jawaban dan mengurutkan jawaban
-  const handleShowAnswerKey = () => {
-    setShowAnswerKey(true);
-    setShowForm(false);
-    setSortedAnswers(
-      answers
-        .sort((a, b) => b.similarity - a.similarity)
-    );
   };
 
   return (
@@ -98,13 +172,14 @@ const Essay = () => {
           >
             <span className="font-semibold text-lg">{answer.text}</span>
             <div className="text-sm text-gray-600 mt-1">
-              (Similarity: {answer.similarity.toFixed(2)})
+              ({answer.namaSiswa})
+              ({answer.similarity.toFixed(2)})
             </div>
           </div>
         ))}
         {showAnswerKey && (
           <button
-            onClick={() => navigate('/tipe-soal')}
+            onClick={() => navigate(`/tipe-soal/${id}`)}
             className="bg-blue-500 text-white p-4 rounded-md shadow hover:bg-blue-600 transition mt-8"
           >
             Kembali ke Halaman Awal
@@ -127,7 +202,7 @@ const Essay = () => {
             >
               <span className="font-semibold text-lg">{answer.text}</span>
               <div className="text-sm text-gray-600 mt-1">
-                (Similarity: {answer.similarity.toFixed(2)})
+                ({answer.namaSiswa})
               </div>
             </div>
           ))}

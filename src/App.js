@@ -8,6 +8,8 @@ import TambahMenu from './page/guru/TambahMenu';
 import PilihTipeSoal from './page/PilihTipeSoal';
 import Landingpage from './page/Landingpage';
 import ContentPage from './page/contents/ContentPage';
+import TambahSoal from './page/guru/TambahSoal';
+import DaftarNilai from './page/guru/DaftarNilai';
 
 const App = () => {
   return (
@@ -16,10 +18,12 @@ const App = () => {
         <Route path="/" element={<Landingpage />} />
         <Route path="/dashboard" element={<DashboardGuru />} />
         <Route path="/petunjuk" element={<ContentPage />} />
-        <Route path="/menusoal" element={<TambahMenu />} />
-        <Route path="/tipe-soal" element={<PilihTipeSoal />} />
-        <Route path="/pilihan-ganda" element={<PilihanGandaPage />} />
-        <Route path="/tanya-jawab-essay" element={<TanyaJawabEssay />} />
+        <Route path="/tambah-soal" element={<TambahSoal />} />
+        <Route path="/daftar-nilai" element={<DaftarNilai />} />
+        <Route path="/tipe-soal/:id" element={<PilihTipeSoal />} />
+        <Route path="/menusoal/:id" element={<TambahMenu />} />
+        <Route path="/pilihan-ganda/:id" element={<PilihanGandaPage />} />
+        <Route path="/tanya-jawab-essay/:id" element={<TanyaJawabEssay />} />
       </Routes>
     </Router>
   );

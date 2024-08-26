@@ -8,7 +8,8 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "animejs": "^3.2.2",
-    "axios": "^1.7.3",
+    "antd": "^5.20.2",
+    "axios": "^1.7.5",
     "frontend": "file:",
     "jodit-react": "^4.1.2",
     "natural": "^7.1.0",
@@ -20,6 +21,7 @@
     "react-router-dom": "^6.26.0",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.7.5",
+    "stream-http": "^3.2.0",
     "string-similarity": "^4.0.4",
     "web-vitals": "^2.1.4"
   },
