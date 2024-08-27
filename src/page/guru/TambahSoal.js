@@ -13,33 +13,36 @@ const TambahSoal = () => {
   const [soal, setSoal] = useState('');
   const [opsi, setOpsi] = useState(['']); // Options for 'pilihan-ganda' questions
   const [checkedOptions, setCheckedOptions] = useState([]); // To track selected options
+  const [kunci, setKunci] = useState(''); // Key for essay questions
   const [error, setError] = useState('');
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
+      let response;
       if (type === 'pilihan-ganda') {
-        await axios.post(`${process.env.REACT_APP_API_URL}/api/pilihanGanda`, {
+        response = await axios.post(`${process.env.REACT_APP_API_URL}api/pilihanGanda`, {
           soal,
           kunci: checkedOptions[0], // Assuming only one correct answer for simplicity
           pilihan: opsi,
         });
         alert('Soal Pilihan Ganda berhasil ditambahkan');
       } else if (type === 'essay') {
-        await axios.post(`${process.env.REACT_APP_API_URL}/api/essay`, {
+        response = await axios.post(`${process.env.REACT_APP_API_URL}api/essay`, {
           soal,
-          kunci: '', // 'kunci' is not needed for essay questions
+          kunci, // Include the key for essay questions
         });
         alert('Soal Esai berhasil ditambahkan');
       }
       navigate('/dashboard');
     } catch (error) {
-      setError('Terjadi kesalahan saat menambahkan soal');
-      console.error('Error adding question:', error);
+      console.error('Error adding question:', error.response || error.message || error);
+      setError('Terjadi kesalahan saat menambahkan soal. Silakan coba lagi.');
     }
   };
+  
 
   // Handle option input changes
   const handleOptionChange = (index, value) => {
@@ -141,6 +144,21 @@ const TambahSoal = () => {
               </button>
             </div>
           </>
+        )}
+
+        {type === 'essay' && (
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="kunci">
+              Kunci Jawaban
+            </label>
+            <input
+              id="kunci"
+              value={kunci}
+              onChange={(e) => setKunci(e.target.value)}
+              className="border border-gray-300 rounded-md p-2 w-full"
+              type="text"
+            />
+          </div>
         )}
 
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}

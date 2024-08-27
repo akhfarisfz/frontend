@@ -17,7 +17,7 @@ const PilihanGandaPage = () => {
     // Fetch Pilihan Ganda questions from the API
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/pilihanGanda`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}api/pilihanGanda`);
         setQuestions(response.data);
       } catch (error) {
         console.error('Error fetching questions:', error);
@@ -27,7 +27,7 @@ const PilihanGandaPage = () => {
     // Fetch username based on id
     const fetchUsername = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/siswa/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}api/siswa/${id}`);
         setUsername(response.data.namaSiswa); // Adjust based on your API response
       } catch (error) {
         console.error('Error fetching username:', error);
@@ -75,7 +75,7 @@ const PilihanGandaPage = () => {
     }));
 
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/siswa/${id}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}api/siswa/${id}`, {
         namaSiswa: username, // Use the fetched username
         pilihanGanda: answersToSubmit,
       });

@@ -24,7 +24,7 @@ const Essay = () => {
     const fetchEssayData = async () => {
       try {
         // Fetch essay data
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/essay`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}api/essay`);
         if (response.data && response.data.length > 0) {
           const essayData = response.data[0];
           setQuestion(essayData.soal);
@@ -33,7 +33,7 @@ const Essay = () => {
 
           // Fetch student name and answers
           if (id) {
-            const studentResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/siswa/${id}`);
+            const studentResponse = await axios.get(`${process.env.REACT_APP_API_URL}api/siswa/${id}`);
             if (studentResponse.data) {
               setStudentName(studentResponse.data.namaSiswa);
               setAnswers(studentResponse.data.essay || []);
@@ -80,7 +80,7 @@ const Essay = () => {
 
     // Post user answer to the API
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/siswa`, {
+      await axios.post(`${process.env.REACT_APP_API_URL}api/siswa`, {
         namaSiswa: studentName,
         essay: [{ jawabanSiswa: userAnswer, skorEssay: similarity, soal: essayId }]
       });
@@ -101,7 +101,7 @@ const Essay = () => {
   
     // Update answers in the API
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/siswa/${id}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}api/siswa/${id}`, {
         essay: answers.map(answer => ({
           jawabanSiswa: answer.text,
           skorEssay: answer.similarity,
