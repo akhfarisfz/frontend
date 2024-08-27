@@ -10,6 +10,7 @@ const DashboardGuru = () => {
   const navigate = useNavigate();
   const state = location.state || {};
   const username = state.username;
+  const id = '66cd3e15c0e4bd9ead984886'
 
   useEffect(() => {
     // Fetch Pilihan Ganda data
@@ -98,7 +99,7 @@ const DashboardGuru = () => {
       </div>
       <div className="w-full mb-6 flex">
         <button
-          onClick={() => navigate('/daftar-nilai')}
+          onClick={() => navigate(`/tipe-soal/${id}`)}
           className="bg-yellow-500 text-white p-4 rounded-md shadow hover:bg-blue-600 transition flex items-center justify-center w-full"
         >
           <MdOutlineNotes className="text-2xl mr-2" />
