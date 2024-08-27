@@ -12,6 +12,7 @@ const PilihanGandaPage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [username, setUsername] = useState('');
+  const [answerSummary, setAnswerSummary] = useState([]);
   const [loading, setLoading] = useState(true); // State to handle loading
   const [error, setError] = useState(null); // State for error handling
 
@@ -85,16 +86,26 @@ const PilihanGandaPage = () => {
       soal: q._id, // Assuming the question has an `_id` field
     }));
 
+    // Generate answer summary
+    const summary = questions.map((q, index) => ({
+      nomor: index + 1,
+      benar: userAnswers[index] === q.kunci,
+    }));
+
+    setAnswerSummary(summary);
+
     try {
       await axios.put(`${process.env.REACT_APP_API_URL}api/siswa/${id}`, {
         namaSiswa: username, // Use the fetched username
         pilihanGanda: answersToSubmit,
+        skorPilihanGanda: score
       });
     } catch (error) {
       console.error('Error submitting answers:', error);
       setError('Failed to submit answers.');
     }
   };
+
 
   if (loading) {
     return <p>Loading...</p>;
@@ -107,55 +118,73 @@ const PilihanGandaPage = () => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      {!submitted ? (
-        <>
-          <h1 className="text-3xl font-bold mb-6 text-gray-800">Soal Pilihan Ganda</h1>
-
-          {currentQuestion ? (
-            <div className="mb-6 w-full max-w-xl">
-              <h2 className="text-xl font-semibold mb-4">{currentQuestion.soal}</h2>
-              {currentQuestion.pilihan ? (
-                currentQuestion.pilihan.map((option, i) => (
-                  <label key={i} className="block mb-2">
-                    <input
-                      type="radio"
-                      name={`soalPilihanGanda-${currentQuestionIndex}`}
-                      value={option}
-                      checked={userAnswers[currentQuestionIndex] === option}
-                      onChange={() => handleAnswerChange(option)}
-                      className="mr-2"
-                    />
-                    {option}
-                  </label>
-                ))
-              ) : (
-                <p>Loading options...</p>
-              )}
+    <div className="relative flex flex-col min-h-screen bg-gray-100 p-6">
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 w-full bg-teal-600 text-white py-4 px-6 shadow-md z-10">
+        <h1 className="text-3xl font-bold text-center">Soal Pilihan Ganda</h1>
+      </header>
+      
+      {/* Content Area */}
+      <div className="flex flex-col items-center justify-center min-h-screen pt-20"> {/* Add pt-20 to account for fixed header */}
+        {!submitted ? (
+          <>
+            {currentQuestion ? (
+              <div className="mb-8 w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg">
+                <h2 className="text-2xl font-semibold mb-6 text-gray-900">{currentQuestion.soal}</h2>
+                {currentQuestion.pilihan ? (
+                  currentQuestion.pilihan.map((option, i) => (
+                    <label key={i} className="block mb-4 p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition">
+                      <input
+                        type="radio"
+                        name={`soalPilihanGanda-${currentQuestionIndex}`}
+                        value={option}
+                        checked={userAnswers[currentQuestionIndex] === option}
+                        onChange={() => handleAnswerChange(option)}
+                        className="mr-3 accent-blue-500"
+                      />
+                      <span className="text-lg text-gray-700">{option}</span>
+                    </label>
+                  ))
+                ) : (
+                  <p>Loading options...</p>
+                )}
+              </div>
+            ) : (
+              <p>Loading...</p>
+            )}
+            <button
+              onClick={handleNextQuestion}
+              className="bg-blue-600 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105"
+            >
+              {currentQuestionIndex < questions.length - 1 ? 'Soal Berikutnya' : 'Submit Jawaban'}
+            </button>
+          </>
+        ) : (
+          <div className="mt-8 text-2xl font-bold text-gray-800 flex flex-col items-center">
+            <p>Terimakasih telah menyelesaikan soal!</p>
+            <div className="mt-6 w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Rangkuman Jawaban</h2>
+              {answerSummary.map((item, index) => (
+                <div
+                key={index}
+                className={`mb-4 p-4 rounded-lg ${item.benar ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+              >
+                <p className="text-md">{item.nomor}. <span className="font-bold">{item.benar ? 'Benar' : 'Salah'}</span></p>
+              </div>
+              ))}
             </div>
-          ) : (
-            <p>Loading...</p>
-          )}
-          <button
-            onClick={handleNextQuestion}
-            className="bg-blue-500 text-white p-2 rounded-md shadow hover:bg-blue-600 transition"
-          >
-            {currentQuestionIndex < questions.length - 1 ? 'Soal Berikutnya' : 'Submit Jawaban'}
-          </button>
-        </>
-      ) : (
-        <div className="mt-6 text-xl font-bold text-gray-800">
-          Terimakasih
-          <button
-            onClick={() => navigate(`/tipe-soal/${id}`)} // Pass id as state
-            className="bg-blue-500 text-white p-2 rounded-md shadow hover:bg-blue-600 transition ml-4"
-          >
-            Kembali
-          </button>
-        </div>
-      )}
+            <button
+              onClick={() => navigate(`/tipe-soal/${id}`)}
+              className="bg-blue-600 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-transform transform hover:scale-105 mt-6"
+            >
+              Kembali
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
+  
 };
 
 export default PilihanGandaPage;

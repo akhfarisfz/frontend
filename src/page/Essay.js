@@ -128,6 +128,10 @@ const Essay = () => {
 
   return (
     <div className="relative flex flex-col items-center min-h-screen bg-gray-100">
+      {/* Header Section */}
+      <header className="bg-teal-600 text-white w-full py-4 px-6 shadow-md">
+        <h1 className="text-3xl font-bold">Esai</h1>
+      </header>
       <div className="relative flex flex-col items-center w-full max-w-4xl mt-10">
         <h1 className="text-4xl font-bold mb-6 text-gray-800">
           {question}

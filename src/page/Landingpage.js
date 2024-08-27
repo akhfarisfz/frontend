@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-
 function LandingPage() {
   const [username, setUsername] = useState('');
   const [showHero, setShowHero] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
+  const [loading, setLoading] = useState(false); // State for loading animation
   const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show spinner when form is submitted
 
     try {
-      const response = await axios.post('https://webkonsep-backend.vercel.app/api/siswa', { namaSiswa: username });
-      const { message, siswa } = response.data; // Ambil 'siswa' dari respons
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}api/siswa`, { namaSiswa: username });
+      const { message, siswa } = response.data;
 
       if (message === 'Siswa sudah terdaftar') {
         console.log('User already registered');
@@ -21,21 +23,22 @@ function LandingPage() {
         console.log('User registered successfully');
       }
 
-      const id = siswa?._id; // Ambil ID dari objek siswa
-      console.log(id)
+      const id = siswa?._id;
+      console.log(id);
 
-      // Navigasi berdasarkan peran dan sertakan ID dalam URL
       if (username === 'uslifatuljannah14') {
         navigate('/dashboard', { state: { username: username, role: 'guru' } });
       } else {
         if (id) {
-          navigate(`/tipe-soal/${id}`); // Menambahkan ID ke URL params
+          navigate(`/tipe-soal/${id}`);
         } else {
           console.error('ID tidak ditemukan dalam respons');
         }
       }
     } catch (error) {
       console.error('Error during login:', error);
+    } finally {
+      setLoading(false); // Hide spinner when login process is complete
     }
   };
 
@@ -64,8 +67,8 @@ function LandingPage() {
 
       {/* Login Section */}
       {showLogin && (
-        <div className="flex items-center justify-center min-h-screen bg-yellow-50">
-          <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+        <div className="relative flex items-center justify-center min-h-screen bg-yellow-50">
+          <div className="w-full max-w-md bg-white bg-opacity-90 p-8 rounded-lg shadow-lg border border-gray-300">
             <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">Masukkan Nama Kamu</h1>
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
@@ -78,17 +81,25 @@ function LandingPage() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
+                  placeholder="Masukkan nama lengkap"
+                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 sm:text-sm transition-transform transform hover:scale-105"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-2 px-4 rounded-md shadow-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-transform transform hover:scale-105"
               >
                 Log in
               </button>
             </form>
+
+            {/* Show spinner during loading */}
+            {loading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70">
+                <div className="w-16 h-16 border-4 border-t-4 border-teal-500 border-solid rounded-full animate-spin"></div>
+              </div>
+            )}
           </div>
         </div>
       )}

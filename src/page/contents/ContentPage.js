@@ -1,50 +1,51 @@
-import React, { useState, useCallback } from 'react';
-import JoditEditor from 'jodit-react';
+import React from 'react';
 
-const Editor = () => {
-  const [text, setText] = useState('');
-  const [savedText, setSavedText] = useState('');
-
-  // Handle content change
-  const handleTextChange = useCallback((content) => {
-    setText(content);
-  }, []);
-
-  // Save content when SAVE button is clicked
-  const handleSave = () => {
-    console.log("Saved Content HTML: ", text); // Debugging: Log HTML content
-    setSavedText(text);
-  };
-
-  // Editor configuration
-  const editorConfig = {
-    uploader: {
-      insertImageAsBase64URI: true,
-    },
-    editor: {
-      allowedContent: true,  // Allow all content including <iframe> for videos
-    },
-  };
-
+const Guidelines = () => {
   return (
-    <div>
-      <JoditEditor
-        value={text}
-        onChange={handleTextChange}
-        config={editorConfig}
-      />
-      <div style={{ marginTop: 20 }}>
-        <button onClick={handleSave}>SAVE</button>
+    <div className="container mx-auto p-6">
+      <h1 className="text-4xl font-bold text-center mb-8">Pedoman Penggunaan Aplikasi</h1>
+
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Video Tutorial</h2>
+        <div className="aspect-w-16 aspect-h-9">
+          <iframe
+            width="100%"
+            height="400"
+            src="https://www.youtube.com/embed/FQPlEnKav48"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="rounded-lg shadow-lg"
+          ></iframe>
+        </div>
       </div>
-      <div style={{ marginTop: 20 }}>
-        <h3>Saved Content:</h3>
-        <div
-          style={{ border: '1px solid #ddd', padding: 10 }}
-          dangerouslySetInnerHTML={{ __html: savedText }}
-        />
+
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Unduh Pedoman PDF</h2>
+        <a
+          href="/path/to/your-pdf.pdf"
+          download
+          className="bg-teal-500 text-white py-2 px-4 rounded-lg shadow hover:bg-teal-600 transition"
+        >
+          Download PDF
+        </a>
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-semibold mb-4">Panduan Penggunaan Aplikasi untuk Siswa SD</h2>
+        <ul className="list-disc list-inside text-lg">
+          <li>Pastikan kamu telah menonton video tutorial di atas.</li>
+          <li>Masukkan nama kamu dengan benar saat login.</li>
+          <li>Pilih soal yang sesuai dengan pelajaranmu.</li>
+          <li>Ikuti instruksi pada setiap soal dengan seksama.</li>
+          <li>Jangan takut untuk mencoba lagi jika kamu salah.</li>
+          <li>Gunakan fitur "Show Answer Key" hanya jika kamu sudah mencoba menjawab soal.</li>
+          <li>Hubungi gurumu jika ada kesulitan dalam menggunakan aplikasi.</li>
+        </ul>
       </div>
     </div>
   );
 };
 
-export default Editor;
+export default Guidelines;
