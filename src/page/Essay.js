@@ -4,7 +4,7 @@ import stringSimilarity from 'string-similarity';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('https://webkonsep-backend.vercel.app/'); // Connect to the server
+const socket = io(`${process.env.REACT_APP_API_URL}`); // Connect to the server
 // const socket = io('localhost'); // Connect to the server
 
 const Essay = () => {
@@ -24,7 +24,7 @@ const Essay = () => {
     const fetchEssayData = async () => {
       try {
         // Fetch essay data
-        const response = await axios.get('https://webkonsep-backend.vercel.app/api/essay');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/essay`);
         if (response.data && response.data.length > 0) {
           const essayData = response.data[0];
           setQuestion(essayData.soal);
@@ -33,7 +33,7 @@ const Essay = () => {
 
           // Fetch student name and answers
           if (id) {
-            const studentResponse = await axios.get(`https://webkonsep-backend.vercel.app/api/siswa/${id}`);
+            const studentResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/siswa/${id}`);
             if (studentResponse.data) {
               setStudentName(studentResponse.data.namaSiswa);
               setAnswers(studentResponse.data.essay || []);
