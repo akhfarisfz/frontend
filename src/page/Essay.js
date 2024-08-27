@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import stringSimilarity from 'string-similarity';
 import axios from 'axios';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 
-const socket = io(`${process.env.REACT_APP_API_URL}`); // Connect to the server
-// const socket = io('localhost'); // Connect to the server
+// const socket = io(`${process.env.REACT_APP_API_URL}`); // Connect to the server
+// // const socket = io('localhost'); // Connect to the server
 
 const Essay = () => {
   const [question, setQuestion] = useState('');
@@ -49,17 +49,17 @@ const Essay = () => {
 
     fetchEssayData();
 
-    // Listen for answer submissions
-    socket.on('answerSubmitted', (data) => {
-      if (data.soal === essayId) {
-        setAnswers(prevAnswers => [...prevAnswers, { ...data, namaSiswa: data.namaSiswa }]);
-      }
-    });
+    // // Listen for answer submissions
+    // socket.on('answerSubmitted', (data) => {
+    //   if (data.soal === essayId) {
+    //     setAnswers(prevAnswers => [...prevAnswers, { ...data, namaSiswa: data.namaSiswa }]);
+    //   }
+    // });
 
     // Clean up on component unmount
-    return () => {
-      socket.off('answerSubmitted');
-    };
+    // return () => {
+    //   socket.off('answerSubmitted');
+    // };
   }, [id, essayId]);
 
   const handleChange = (e) => {
@@ -80,13 +80,13 @@ const Essay = () => {
 
     // Post user answer to the API
     try {
-      await axios.post('https://webkonsep-backend.vercel.app/api/siswa', {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/siswa`, {
         namaSiswa: studentName,
         essay: [{ jawabanSiswa: userAnswer, skorEssay: similarity, soal: essayId }]
       });
 
       // Emit answer submission event
-      socket.emit('submitAnswer', { text: userAnswer, similarity, color, position, soal: essayId, namaSiswa: studentName });
+      // socket.emit('submitAnswer', { text: userAnswer, similarity, color, position, soal: essayId, namaSiswa: studentName });
     } catch (error) {
       console.error('Error posting user answer:', error);
     }
@@ -101,7 +101,7 @@ const Essay = () => {
   
     // Update answers in the API
     try {
-      await axios.put(`https://webkonsep-backend.vercel.app/api/siswa/${id}`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/siswa/${id}`, {
         essay: answers.map(answer => ({
           jawabanSiswa: answer.text,
           skorEssay: answer.similarity,
