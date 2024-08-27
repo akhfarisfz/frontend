@@ -4,7 +4,7 @@ import stringSimilarity from 'string-similarity';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('webkonsep-backend-q6ab3ichy-akhfarisfzs-projects.vercel.app'); // Connect to the server
+const socket = io('https://webkonsep-backend.vercel.app/'); // Connect to the server
 // const socket = io('localhost'); // Connect to the server
 
 const Essay = () => {
