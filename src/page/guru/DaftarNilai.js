@@ -9,7 +9,7 @@ const DaftarNilai = () => {
         const fetchStudents = async () => {
             try {
                 // Fetch data from the updated endpoint
-                const response = await axios.get('http://localhost:4000/api/siswa');
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/siswa`);
                 setStudents(response.data);
             } catch (error) {
                 setError('Error fetching student data');

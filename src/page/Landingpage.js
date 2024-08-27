@@ -12,7 +12,7 @@ function LandingPage() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:4000/api/siswa', { namaSiswa: username });
+      const response = await axios.post('https://webkonsep-backend.vercel.app/api/siswa', { namaSiswa: username });
       const { message, siswa } = response.data; // Ambil 'siswa' dari respons
 
       if (message === 'Siswa sudah terdaftar') {

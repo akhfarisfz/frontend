@@ -24,7 +24,7 @@ const Essay = () => {
     const fetchEssayData = async () => {
       try {
         // Fetch essay data
-        const response = await axios.get('http://localhost:4000/api/essay');
+        const response = await axios.get('https://webkonsep-backend.vercel.app/api/essay');
         if (response.data && response.data.length > 0) {
           const essayData = response.data[0];
           setQuestion(essayData.soal);
@@ -33,7 +33,7 @@ const Essay = () => {
 
           // Fetch student name and answers
           if (id) {
-            const studentResponse = await axios.get(`http://localhost:4000/api/siswa/${id}`);
+            const studentResponse = await axios.get(`https://webkonsep-backend.vercel.app/api/siswa/${id}`);
             if (studentResponse.data) {
               setStudentName(studentResponse.data.namaSiswa);
               setAnswers(studentResponse.data.essay || []);
@@ -80,7 +80,7 @@ const Essay = () => {
 
     // Post user answer to the API
     try {
-      await axios.post('http://localhost:4000/api/siswa', {
+      await axios.post('https://webkonsep-backend.vercel.app/api/siswa', {
         namaSiswa: studentName,
         essay: [{ jawabanSiswa: userAnswer, skorEssay: similarity, soal: essayId }]
       });
@@ -101,7 +101,7 @@ const Essay = () => {
   
     // Update answers in the API
     try {
-      await axios.put(`http://localhost:4000/api/siswa/${id}`, {
+      await axios.put(`https://webkonsep-backend.vercel.app/api/siswa/${id}`, {
         essay: answers.map(answer => ({
           jawabanSiswa: answer.text,
           skorEssay: answer.similarity,

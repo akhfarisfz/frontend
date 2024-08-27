@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
@@ -21,14 +21,14 @@ const TambahSoal = () => {
 
     try {
       if (type === 'pilihan-ganda') {
-        await axios.post('http://localhost:4000/api/pilihanGanda', {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/pilihanGanda`, {
           soal,
           kunci: checkedOptions[0], // Assuming only one correct answer for simplicity
           pilihan: opsi,
         });
         alert('Soal Pilihan Ganda berhasil ditambahkan');
       } else if (type === 'essay') {
-        await axios.post('http://localhost:4000/api/essay', {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/essay`, {
           soal,
           kunci: '', // 'kunci' is not needed for essay questions
         });

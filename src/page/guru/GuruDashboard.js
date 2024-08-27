@@ -15,7 +15,7 @@ const DashboardGuru = () => {
     // Fetch Pilihan Ganda data
     const fetchPilihanGanda = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/pilihanGanda');
+        const response = await axios.get('${process.env.REACT_APP_API_URL}/api/pilihanGanda');
         setPilihanGanda(response.data);
       } catch (error) {
         console.error('Error fetching Pilihan Ganda data:', error);
@@ -25,7 +25,7 @@ const DashboardGuru = () => {
     // Fetch Essay data
     const fetchEssay = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/essay');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/essay`);
         setEssay(response.data);
       } catch (error) {
         console.error('Error fetching Essay data:', error);
@@ -44,10 +44,10 @@ const DashboardGuru = () => {
   const handleDelete = async (type, id) => {
     try {
       if (type === 'Pilihan Ganda') {
-        await axios.delete(`http://localhost:4000/api/pilihanGanda/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/pilihanGanda/${id}`);
         setPilihanGanda(pilihanGanda.filter(item => item._id !== id));
       } else if (type === 'Esai') {
-        await axios.delete(`http://localhost:4000/api/essay/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/essay/${id}`);
         setEssay(essay.filter(item => item._id !== id));
       }
       alert(`${type} deleted successfully`);
