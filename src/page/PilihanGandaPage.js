@@ -12,33 +12,42 @@ const PilihanGandaPage = () => {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [username, setUsername] = useState('');
+  const [loading, setLoading] = useState(true); // State to handle loading
+  const [error, setError] = useState(null); // State for error handling
 
   useEffect(() => {
-    // Fetch Pilihan Ganda questions from the API
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}api/pilihanGanda`);
+        console.log('Questions fetched:', response.data); // Debugging
         setQuestions(response.data);
       } catch (error) {
         console.error('Error fetching questions:', error);
+        setError('Failed to load questions.');
       }
     };
 
-    // Fetch username based on id
     const fetchUsername = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}api/siswa/${id}`);
-        setUsername(response.data.namaSiswa); // Adjust based on your API response
+        console.log('Username fetched:', response.data); // Debugging
+        setUsername(response.data.namaSiswa);
       } catch (error) {
         console.error('Error fetching username:', error);
+        setError('Failed to load username.');
       }
     };
 
-    fetchQuestions();
-    fetchUsername();
+    const fetchData = async () => {
+      await Promise.all([fetchQuestions(), fetchUsername()]);
+      setLoading(false); // Set loading to false after data is fetched
+    };
+
+    fetchData();
   }, [id]);
 
   const handleAnswerChange = (selectedOption) => {
+    console.log('Selected Option:', selectedOption); // Debugging
     setUserAnswers({
       ...userAnswers,
       [currentQuestionIndex]: selectedOption,
@@ -46,6 +55,7 @@ const PilihanGandaPage = () => {
   };
 
   const handleNextQuestion = () => {
+    console.log('Current Question Index:', currentQuestionIndex); // Debugging
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
@@ -56,6 +66,7 @@ const PilihanGandaPage = () => {
   };
 
   const calculateScore = () => {
+    console.log('Calculating Score'); // Debugging
     const numQuestions = questions.length;
     let newScore = 0;
     questions.forEach((q, index) => {
@@ -81,8 +92,17 @@ const PilihanGandaPage = () => {
       });
     } catch (error) {
       console.error('Error submitting answers:', error);
+      setError('Failed to submit answers.');
     }
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
+  }
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -128,7 +148,7 @@ const PilihanGandaPage = () => {
           Terimakasih
           <button
             onClick={() => navigate(`/tipe-soal/${id}`)} // Pass id as state
-            className="bg-blue-500 text-white p-2 rounded-md shadow hover:bg-blue-600 transition ml-4" // Added 'ml-4' for spacing
+            className="bg-blue-500 text-white p-2 rounded-md shadow hover:bg-blue-600 transition ml-4"
           >
             Kembali
           </button>
