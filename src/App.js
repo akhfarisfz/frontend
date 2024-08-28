@@ -10,6 +10,7 @@ import Landingpage from './page/Landingpage';
 import ContentPage from './page/contents/ContentPage';
 import TambahSoal from './page/guru/TambahSoal';
 import DaftarNilai from './page/guru/DaftarNilai';
+import VideoPembelajaran from './page/VideoPembelajaran';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/" element={<Landingpage />} />
         <Route path="/dashboard" element={<DashboardGuru />} />
         <Route path="/petunjuk" element={<ContentPage />} />
+        <Route path="/video-pembelajaran" element={<VideoPembelajaran />} />
         <Route path="/tambah-soal" element={<TambahSoal />} />
         <Route path="/daftar-nilai" element={<DaftarNilai />} />
         <Route path="/tipe-soal/:id" element={<PilihTipeSoal />} />

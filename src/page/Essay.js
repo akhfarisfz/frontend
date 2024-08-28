@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import stringSimilarity from 'string-similarity';
 import axios from 'axios';
-// import io from 'socket.io-client';
-
-// const socket = io(`${process.env.REACT_APP_API_URL}`); // Connect to the server
-// // const socket = io('localhost'); // Connect to the server
+import Pusher from 'pusher-js';
 
 const Essay = () => {
   const [question, setQuestion] = useState('');
@@ -37,6 +34,12 @@ const Essay = () => {
             if (studentResponse.data) {
               setStudentName(studentResponse.data.namaSiswa);
               setAnswers(studentResponse.data.essay || []);
+
+              // Check if the student has already submitted an answer for this question
+              const hasSubmittedAnswer = studentResponse.data.essay.some(answer => answer.soal === essayId);
+              if (hasSubmittedAnswer) {
+                setShowForm(false); // Hide form if the answer is already submitted
+              }
             }
           }
         } else {
@@ -49,17 +52,25 @@ const Essay = () => {
 
     fetchEssayData();
 
-    // // Listen for answer submissions
-    // socket.on('answerSubmitted', (data) => {
-    //   if (data.soal === essayId) {
-    //     setAnswers(prevAnswers => [...prevAnswers, { ...data, namaSiswa: data.namaSiswa }]);
-    //   }
-    // });
+    // Initialize Pusher
+    const pusher = new Pusher('eb9edb341b864a7ef56e', {
+      cluster: 'ap1',
+      useTLS: true,
+    });
+
+    // Subscribe to the channel
+    const channel = pusher.subscribe('my-channel');
+    channel.bind('answerSubmitted', (data) => {
+      console.log('Event received:', data);
+      if (data.soal === essayId) {
+        setAnswers(prevAnswers => [...prevAnswers, { ...data, namaSiswa: data.namaSiswa }]);
+      }
+    });
 
     // Clean up on component unmount
-    // return () => {
-    //   socket.off('answerSubmitted');
-    // };
+    return () => {
+      pusher.unsubscribe('my-channel');
+    };
   }, [id, essayId]);
 
   const handleChange = (e) => {
@@ -69,6 +80,13 @@ const Essay = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (userAnswer.trim() === '') return;
+
+    // Check if the student has already submitted an answer
+    const hasSubmittedAnswer = answers.some(answer => answer.soal === essayId && answer.namaSiswa === studentName);
+    if (hasSubmittedAnswer) {
+      console.warn('You have already submitted an answer for this question.');
+      return;
+    }
 
     const similarity = stringSimilarity.compareTwoStrings(userAnswer, correctAnswer);
     const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
@@ -80,13 +98,28 @@ const Essay = () => {
 
     // Post user answer to the API
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}api/siswa`, {
-        namaSiswa: studentName,
-        essay: [{ jawabanSiswa: userAnswer, skorEssay: similarity, soal: essayId }]
+      // Submit answer to api/submitAnswer
+      await axios.post(`${process.env.REACT_APP_API_URL}api/submitAnswer`, {
+        text: userAnswer,
+        similarity,
+        color,
+        position,
+        soal: essayId,
+        namaSiswa: studentName
       });
 
-      // Emit answer submission event
-      // socket.emit('submitAnswer', { text: userAnswer, similarity, color, position, soal: essayId, namaSiswa: studentName });
+      // Submit answer to api/siswa
+      await axios.put(`${process.env.REACT_APP_API_URL}api/siswa/${id}`, {
+        essay: [
+          {
+            jawabanSiswa: userAnswer,
+            skorEssay: similarity,
+            soal: essayId,
+          },
+        ],
+      });
+
+      setShowForm(false); // Hide form after submission
     } catch (error) {
       console.error('Error posting user answer:', error);
     }
@@ -98,7 +131,7 @@ const Essay = () => {
     setSortedAnswers(
       answers.sort((a, b) => b.similarity - a.similarity) // Sort by similarity
     );
-  
+
     // Update answers in the API
     try {
       await axios.put(`${process.env.REACT_APP_API_URL}api/siswa/${id}`, {
@@ -113,8 +146,6 @@ const Essay = () => {
       console.error('Error updating student answers:', error);
     }
   };
-  
-
 
   const getRandomPosition = () => {
     const maxTop = 80; // Max vertical position
@@ -178,7 +209,7 @@ const Essay = () => {
             <span className="font-semibold text-lg">{answer.text}</span>
             <div className="text-sm text-gray-600 mt-1">
               ({answer.namaSiswa})
-              ({answer.similarity.toFixed(2)})
+              ({answer.similarity !== undefined ? answer.similarity.toFixed(2) : 'N/A'})
             </div>
           </div>
         ))}
