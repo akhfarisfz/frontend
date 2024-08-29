@@ -30,7 +30,7 @@ function LandingPage() {
         navigate('/dashboard', { state: { username: username, role: 'guru' } });
       } else {
         if (id) {
-          navigate(`/petunjuk/${id}`);
+          navigate(`/tipe-soal/${id}`);
         } else {
           console.error('ID tidak ditemukan dalam respons');
         }

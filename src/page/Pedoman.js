@@ -18,7 +18,6 @@ const Pedoman = () => {
     'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F5.jpg?alt=media&token=268bcd87-bd24-4080-b82f-ec6cda9b94b1',
     'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F6.jpg?alt=media&token=268bcd87-bd24-4080-b82f-ec6cda9b94b1',
     'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F7.jpg?alt=media&token=268bcd87-bd24-4080-b82f-ec6cda9b94b1',
-    
   ];
 
   useEffect(() => {
@@ -49,35 +48,32 @@ const Pedoman = () => {
 
   return (
     <div className="relative min-h-screen pt-16"
-    style={{
-      backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Science%20Laboratory%20Rules%20Educational%20Presentation%20in%20Blue%20and%20White%20Hand%20Drawn%20Style.png?alt=media&token=108417a0-6e78-434a-9731-33979bb93ee3')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    }}>
+      style={{
+        backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Science%20Laboratory%20Rules%20Educational%20Presentation%20in%20Blue%20and%20White%20Hand%20Drawn%20Style.png?alt=media&token=108417a0-6e78-434a-9731-33979bb93ee3')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}>
       {/* Fixed Header */}
       <header className="fixed top-0 left-0 w-full bg-teal-600 text-white py-4 px-6 shadow-md z-10">
-        <h1 className="text-3xl font-bold text-center">Pedoman Penggunaan Aplikasi Materi Magnetik</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-center">Pedoman Penggunaan Aplikasi Materi Magnetik</h1>
       </header>
-      {/* {PPT} */}
-      <div className=" mx-auto bg-white rounded-lg shadow-xl mt-10 max-w-[70%] relative overflow-hidden">
 
-        <div className="relative">
-          <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
-            <img
-              src={imageUrls[currentIndex]}
-              className={`absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-300 ${transition === 'fade-in' ? 'opacity-100' : 'opacity-0'}`}
-              alt={`Slide ${currentIndex + 1}`}
-              loading="lazy"
-            />
-          </div>
-
+      {/* Image Slider */}
+      <div className="mx-auto bg-white rounded-lg shadow-xl mt-16 max-w-full relative overflow-hidden h-[80vh] md:h-[90vh]">
+        <div className="relative h-full w-full">
+          <img
+            src={imageUrls[currentIndex]}
+            className={`absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-300 ${transition === 'fade-in' ? 'opacity-100' : 'opacity-0'}`}
+            alt={`Slide ${currentIndex + 1}`}
+            loading="lazy"
+          />
           {/* Prev Button */}
           <button
             onClick={handlePrev}
-            className="absolute top-1/2 left-0 transform -translate-y-1/2 z-30 flex items-center justify-center h-10 px-4 bg-black bg-opacity-50 text-white hover:bg-opacity-80"
+            className="absolute top-1/2 left-0 transform -translate-y-1/2 z-30 flex items-center justify-center h-12 px-4 bg-black bg-opacity-50 text-white hover:bg-opacity-80"
             aria-label="Previous"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
@@ -85,22 +81,24 @@ const Pedoman = () => {
           {/* Next Button */}
           <button
             onClick={handleNext}
-            className="absolute top-1/2 right-0 transform -translate-y-1/2 z-30 flex items-center justify-center h-10 px-4 bg-black bg-opacity-50 text-white hover:bg-opacity-80"
+            className="absolute top-1/2 right-0 transform -translate-y-1/2 z-30 flex items-center justify-center h-12 px-4 bg-black bg-opacity-50 text-white hover:bg-opacity-80"
             aria-label="Next"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
             </svg>
           </button>
         </div>
       </div>
-      <div>
+
+      {/* Navigate Button */}
+      <div className="mt-12 px-4">
         <button
-          onClick={() => navigate(`/materi-ajar/${id}`)}
-          className="bg-yellow-500 text-white p-4 mt-12 rounded-md shadow hover:bg-blue-600 transition flex items-center justify-center w-full"
+          onClick={() => navigate(`/tipe-soal/${id}`)}
+          className="bg-yellow-500 text-white p-4 rounded-md shadow hover:bg-yellow-600 transition flex items-center justify-center w-full md:w-auto"
         >
-          <MdArrowRight className="text-2xl mr-2" />
-          <span className="text-lg">Lanjut ke Materi Ajar</span>
+          <MdArrowRight className="text-xl md:text-2xl mr-2" />
+          <span className="text-base md:text-lg">Kembali ke Menu</span>
         </button>
       </div>
     </div>

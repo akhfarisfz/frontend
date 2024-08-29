@@ -7,7 +7,6 @@ import TanyaJawabEssay from './page/Essay';
 import TambahMenu from './page/guru/TambahMenu';
 import PilihTipeSoal from './page/PilihTipeSoal';
 import Landingpage from './page/Landingpage';
-import ContentPage from './page/contents/ContentPage';
 import TambahSoal from './page/guru/TambahSoal';
 import DaftarNilai from './page/guru/DaftarNilai';
 import Pedoman from './page/Pedoman';
