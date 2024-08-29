@@ -10,7 +10,9 @@ import Landingpage from './page/Landingpage';
 import ContentPage from './page/contents/ContentPage';
 import TambahSoal from './page/guru/TambahSoal';
 import DaftarNilai from './page/guru/DaftarNilai';
-import VideoPembelajaran from './page/VideoPembelajaran';
+import Pedoman from './page/Pedoman';
+import MateriAjar from './page/MateriAjar';
+
 
 const App = () => {
   return (
@@ -18,10 +20,10 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Landingpage />} />
         <Route path="/dashboard" element={<DashboardGuru />} />
-        <Route path="/petunjuk" element={<ContentPage />} />
-        <Route path="/video-pembelajaran" element={<VideoPembelajaran />} />
         <Route path="/tambah-soal" element={<TambahSoal />} />
         <Route path="/daftar-nilai" element={<DaftarNilai />} />
+        <Route path="/petunjuk/:id" element={<Pedoman />} />
+        <Route path="/materi-ajar/:id" element={<MateriAjar />} />
         <Route path="/tipe-soal/:id" element={<PilihTipeSoal />} />
         <Route path="/menusoal/:id" element={<TambahMenu />} />
         <Route path="/pilihan-ganda/:id" element={<PilihanGandaPage />} />

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FaTimes } from 'react-icons/fa';
 
 function LandingPage() {
   const [username, setUsername] = useState('');
-  const [showHero, setShowHero] = useState(true);
   const [showLogin, setShowLogin] = useState(false);
-  const [loading, setLoading] = useState(false); // State for loading animation
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true); // Show spinner when form is submitted
+    setLoading(true);
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}api/siswa`, { namaSiswa: username });
@@ -30,7 +30,7 @@ function LandingPage() {
         navigate('/dashboard', { state: { username: username, role: 'guru' } });
       } else {
         if (id) {
-          navigate(`/tipe-soal/${id}`);
+          navigate(`/petunjuk/${id}`);
         } else {
           console.error('ID tidak ditemukan dalam respons');
         }
@@ -38,37 +38,57 @@ function LandingPage() {
     } catch (error) {
       console.error('Error during login:', error);
     } finally {
-      setLoading(false); // Hide spinner when login process is complete
+      setLoading(false);
+      setShowLogin(false); // Close modal on successful login
     }
   };
 
   const handleStart = () => {
-    setShowHero(false);
     setShowLogin(true);
   };
 
   return (
-    <div className="relative h-screen bg-gradient-to-r from-pink-400 via-yellow-300 to-blue-400">
-      {/* Hero Section */}
-      {showHero && (
-        <div className="flex items-center justify-center h-full bg-white bg-opacity-60">
-          <div className="text-center p-6">
-            <h1 className="text-4xl md:text-6xl font-extrabold text-gray-800 mb-4">Selamat Datang di Web Pembelajaran</h1>
-            <p className="text-lg md:text-2xl text-gray-700 mb-8">Dengan Experiential Learning, Temukan Cara Baru dalam Mengajar dan Belajar.</p>
-            <button
-              onClick={handleStart}
-              className="bg-teal-500 text-white py-3 px-6 rounded-lg text-lg transition-transform transform hover:scale-105"
-            >
-              Mulai Sekarang
-            </button>
-          </div>
+    <div className="relative h-auto bg-gradient-to-r from-blue-300 via-green-300 to-yellow-300">
+      {/* Transparent Navbar */}
+      {/* <nav className="relative top-0 left-0 w-full bg-transparent text-white py-4 px-6 shadow-md z-20 flex justify-between items-center">
+        <div>
+          <a href="#section1" className="mr-4 hover:underline">Apa Itu Magnet?</a>
+          <a href="#section2" className="mr-4 hover:underline">Bagaimana Cara Kerja Magnet?</a>
+          <a href="#section3" className="hover:underline">Eksperimen Seru</a>
         </div>
-      )}
+        <div>
+          <button
+            onClick={handleStart}
+            className="bg-teal-500 text-white py-3 px-6 rounded-lg text-lg transition-transform transform hover:scale-105"
+          >
+            Mulai Belajar
+          </button>
+        </div>
+      </nav> */}
 
-      {/* Login Section */}
+      {/* Hero Section */}
+      <div className="flex items-center justify-center h-screen bg-white bg-opacity-60">
+        <div className="text-center p-6">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-800 mb-4">Selamat Datang di Pembelajaran Magnet!</h1>
+          <p className="text-lg md:text-2xl text-gray-700 mb-8">Dengan Experiential Learning, Temukan Keajaiban Magnet di Sekitar Kita.</p>
+          <button
+            onClick={handleStart}
+            className="bg-teal-500 text-white py-3 px-6 rounded-lg text-lg transition-transform transform hover:scale-105"
+          >
+            Mulai Belajar
+          </button>
+        </div>
+      </div>
+      {/* Login Modal */}
       {showLogin && (
-        <div className="relative flex items-center justify-center min-h-screen bg-yellow-50">
-          <div className="w-full max-w-md bg-white bg-opacity-90 p-8 rounded-lg shadow-lg border border-gray-300">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md relative">
+            <button
+              onClick={() => setShowLogin(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+            >
+              <FaTimes className="text-2xl" />
+            </button>
             <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">Masukkan Nama Kamu</h1>
             <form onSubmit={handleLogin} className="space-y-6">
               <div>

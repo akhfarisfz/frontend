@@ -106,7 +106,6 @@ const PilihanGandaPage = () => {
     }
   };
 
-
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -117,15 +116,32 @@ const PilihanGandaPage = () => {
 
   const currentQuestion = questions[currentQuestionIndex];
 
+  // Calculate progress
+  const progress = (currentQuestionIndex + 1) / questions.length * 100;
+
   return (
-    <div className="relative flex flex-col min-h-screen bg-gray-100 p-6">
+    <div className="relative flex flex-col min-h-screen bg-gray-100">
       {/* Fixed Header */}
       <header className="fixed top-0 left-0 w-full bg-teal-600 text-white py-4 px-6 shadow-md z-10">
         <h1 className="text-3xl font-bold text-center">Soal Pilihan Ganda</h1>
       </header>
       
+      {/* Progress Bar */}
+      <div className="fixed top-16 left-0 w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 z-10">
+        <div
+          className="bg-blue-600 h-2.5 rounded-full"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+  
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/3838986.jpg?alt=media&token=845c9b69-9052-40b1-b605-eb185a40f1b0')" }}
+      ></div>
+  
       {/* Content Area */}
-      <div className="flex flex-col items-center justify-center min-h-screen pt-20"> {/* Add pt-20 to account for fixed header */}
+      <div className="relative flex flex-col items-center justify-center min-h-screen pt-20 z-20">
         {!submitted ? (
           <>
             {currentQuestion ? (
@@ -133,7 +149,10 @@ const PilihanGandaPage = () => {
                 <h2 className="text-2xl font-semibold mb-6 text-gray-900">{currentQuestion.soal}</h2>
                 {currentQuestion.pilihan ? (
                   currentQuestion.pilihan.map((option, i) => (
-                    <label key={i} className="block mb-4 p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition">
+                    <label
+                      key={i}
+                      className="block mb-4 p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition"
+                    >
                       <input
                         type="radio"
                         name={`soalPilihanGanda-${currentQuestionIndex}`}
@@ -166,11 +185,11 @@ const PilihanGandaPage = () => {
               <h2 className="text-2xl font-semibold mb-4 text-gray-900">Rangkuman Jawaban</h2>
               {answerSummary.map((item, index) => (
                 <div
-                key={index}
-                className={`mb-4 p-4 rounded-lg ${item.benar ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-              >
-                <p className="text-md">{item.nomor}. <span className="font-bold">{item.benar ? 'Benar' : 'Salah'}</span></p>
-              </div>
+                  key={index}
+                  className={`mb-4 p-4 rounded-lg ${item.benar ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+                >
+                  <p className="text-md">{item.nomor}. <span className="font-bold">{item.benar ? 'Benar' : 'Salah'}</span></p>
+                </div>
               ))}
             </div>
             <button
@@ -184,7 +203,6 @@ const PilihanGandaPage = () => {
       </div>
     </div>
   );
-  
 };
 
 export default PilihanGandaPage;

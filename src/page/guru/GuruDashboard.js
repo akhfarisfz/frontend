@@ -99,7 +99,9 @@ const DashboardGuru = () => {
       </div>
       <div className="w-full mb-6 flex">
         <button
-          onClick={() => navigate(`/tipe-soal/${id}`)}
+          onClick={() => navigate(`/tipe-soal/${id}`, {
+            state: { role: 'guru' } 
+          })}
           className="bg-yellow-500 text-white p-4 rounded-md shadow hover:bg-blue-600 transition flex items-center justify-center w-full"
         >
           <MdOutlineNotes className="text-2xl mr-2" />
