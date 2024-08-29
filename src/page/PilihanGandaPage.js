@@ -137,11 +137,11 @@ const PilihanGandaPage = () => {
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/3838986.jpg?alt=media&token=845c9b69-9052-40b1-b605-eb185a40f1b0')" }}
+        style={{ backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/6701110.jpg?alt=media&token=7faa5439-3d9b-4dca-9498-ce54bfaaa2bb')" }}
       ></div>
   
       {/* Content Area */}
-      <div className="relative flex flex-col items-center justify-center min-h-screen pt-20 z-20">
+      <div className="relative flex flex-col items-center justify-center min-h-screen pb-20 z-20">
         {!submitted ? (
           <>
             {currentQuestion ? (

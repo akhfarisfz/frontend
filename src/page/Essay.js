@@ -181,7 +181,7 @@
     return (
       <div className="relative flex flex-col items-center min-h-screen bg-gray-100"
         style={{
-          backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/3838986.jpg?alt=media&token=845c9b69-9052-40b1-b605-eb185a40f1b0')",
+          backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Motivational%20Desktop%20Wallpaper.png?alt=media&token=311be7e7-ebac-4bc9-94b3-6cd2d5edc559')",
           backgroundPosition: 'center',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat'

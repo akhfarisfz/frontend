@@ -12,6 +12,8 @@
     "axios": "^1.7.5",
     "flowbite": "^2.5.1",
     "frontend": "file:",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "natural": "^7.1.0",
     "pusher": "^5.2.0",
     "pusher-js": "^8.4.0-rc2",

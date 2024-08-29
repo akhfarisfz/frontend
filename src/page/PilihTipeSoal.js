@@ -141,7 +141,7 @@ const PilihTipeSoal = () => {
                 <div className="flex items-center flex-grow">
                   <FaBook className="text-4xl mr-4" />
                   <div className="text-left">
-                    <h2 className="text-xl font-bold">Materi Ajar</h2>
+                    <h2 className="text-xl font-bold">MATERI AJAR</h2>
                     <p className="text-sm text-gray-200">Berisi presentasi dan Video pembelajaran Magnetik</p>
                   </div>
                 </div>
@@ -154,7 +154,7 @@ const PilihTipeSoal = () => {
                 <div className="flex items-center flex-grow">
                   <FaBook className="text-4xl mr-4" />
                   <div className="text-left">
-                    <h2 className="text-xl font-bold">PEDOMAN</h2>
+                    <h2 className="text-lg font-bold">PEDOMAN</h2>
                     <p className="text-sm text-gray-200">Kegiatan Magnetik</p>
 
                   </div>
