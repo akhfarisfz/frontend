@@ -1,104 +1,98 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const TambahSoal = () => {
-  const location = useLocation();
+const EditSoal = () => {
+  const { idsoal } = useParams();
   const navigate = useNavigate();
   
-  // Get type from location state, default to 'pilihan-ganda'
-  const initialType = location.state?.type || 'pilihan-ganda';
-  
-  const [type, setType] = useState(initialType);
+  const [type, setType] = useState('');
   const [soal, setSoal] = useState('');
   const [opsi, setOpsi] = useState(['']); // Options for 'pilihan-ganda' questions
   const [checkedOptions, setCheckedOptions] = useState([]); // To track selected options
   const [kunci, setKunci] = useState(''); // Key for essay questions
   const [error, setError] = useState('');
 
-  // Handle form submission
+  useEffect(() => {
+    const fetchQuestion = async () => {
+      try {
+        let response;
+        if (window.location.pathname.includes('pilihan-ganda')) {
+          setType('pilihan-ganda');
+          response = await axios.get(`${process.env.REACT_APP_API_URL}api/pilihanGanda/${idsoal}`);
+          setSoal(response.data.soal);
+          setOpsi(response.data.pilihan);
+          setCheckedOptions([response.data.kunci]);
+        } else if (window.location.pathname.includes('essay')) {
+          setType('essay');
+          response = await axios.get(`${process.env.REACT_APP_API_URL}api/essay/${idsoal}`);
+          setSoal(response.data.soal);
+          setKunci(response.data.kunci);
+        }
+      } catch (error) {
+        console.error('Error fetching question:', error.response || error.message || error);
+        setError('Terjadi kesalahan saat memuat data soal. Silakan coba lagi.');
+      }
+    };
+
+    fetchQuestion();
+  }, [idsoal]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
   
     try {
       let response;
       if (type === 'pilihan-ganda') {
-        // Check if there's at least one option selected as the key
-        if (checkedOptions.length === 0) {
-          alert('Anda harus mengisi kunci jawaban.');
-          return;
-        }
-
-        response = await axios.post(`${process.env.REACT_APP_API_URL}api/pilihanGanda`, {
+        response = await axios.put(`${process.env.REACT_APP_API_URL}api/pilihanGanda/${idsoal}`, {
           soal,
           kunci: checkedOptions[0], // Assuming only one correct answer for simplicity
           pilihan: opsi,
         });
-        alert('Soal Pilihan Ganda berhasil ditambahkan');
+        alert('Soal Pilihan Ganda berhasil diperbarui');
       } else if (type === 'essay') {
-        response = await axios.post(`${process.env.REACT_APP_API_URL}api/essay`, {
+        response = await axios.put(`${process.env.REACT_APP_API_URL}api/essay/${idsoal}`, {
           soal,
           kunci, // Include the key for essay questions
         });
-        alert('Soal Esai berhasil ditambahkan');
+        alert('Soal Esai berhasil diperbarui');
       }
       navigate('/dashboard');
     } catch (error) {
-      console.error('Error adding question:', error.response || error.message || error);
-      setError('Terjadi kesalahan saat menambahkan soal. Silakan coba lagi.');
+      console.error('Error updating question:', error.response || error.message || error);
+      setError('Terjadi kesalahan saat memperbarui soal. Silakan coba lagi.');
     }
   };
-  
-  // Handle option input changes
+
   const handleOptionChange = (index, value) => {
     const newOptions = [...opsi];
     newOptions[index] = value;
     setOpsi(newOptions);
   };
 
-  // Handle checkbox change
   const handleCheckboxChange = (index) => {
-    const selectedOption = opsi[index];
-    if (checkedOptions.includes(selectedOption)) {
-      setCheckedOptions(checkedOptions.filter(opt => opt !== selectedOption));
+    if (checkedOptions.includes(opsi[index])) {
+      setCheckedOptions(checkedOptions.filter(opt => opt !== opsi[index]));
     } else {
-      setCheckedOptions([selectedOption]);
+      setCheckedOptions([opsi[index]]);
     }
   };
 
-  // Add or remove option fields
   const handleAddOption = () => {
     setOpsi([...opsi, '']);
   };
 
   const handleRemoveOption = (index) => {
     setOpsi(opsi.filter((_, i) => i !== index));
-    // Remove the option from checkedOptions if it exists
-    setCheckedOptions(checkedOptions.filter(opt => opt !== opsi[index]));
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
       <header className="bg-white shadow-md p-4 mb-6 rounded-md w-full max-w-full">
-        <h1 className="text-3xl font-bold text-gray-800">Tambah Soal</h1>
+        <h1 className="text-3xl font-bold text-gray-800">Edit Soal</h1>
       </header>
 
       <form onSubmit={handleSubmit} className="w-full max-w-3xl bg-white shadow-md rounded-md p-6">
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="type">
-            Tipe Soal
-          </label>
-          <select
-            id="type"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
-          >
-            <option value="pilihan-ganda">Pilihan Ganda</option>
-            <option value="essay">Esai</option>
-          </select>
-        </div>
-
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="soal">
             Soal
@@ -182,4 +176,4 @@ const TambahSoal = () => {
   );
 };
 
-export default TambahSoal;
+export default EditSoal;

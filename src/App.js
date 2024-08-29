@@ -11,6 +11,8 @@ import TambahSoal from './page/guru/TambahSoal';
 import DaftarNilai from './page/guru/DaftarNilai';
 import Pedoman from './page/Pedoman';
 import MateriAjar from './page/MateriAjar';
+import EditSoal from './page/EditSoal';
+import DaftarKonten from './page/DaftarKonten';
 
 
 const App = () => {
@@ -20,6 +22,9 @@ const App = () => {
         <Route path="/" element={<Landingpage />} />
         <Route path="/dashboard" element={<DashboardGuru />} />
         <Route path="/tambah-soal" element={<TambahSoal />} />
+        <Route path="/edit-soal/essay/:idsoal" element={<EditSoal />} />
+        <Route path="/edit-soal/pilihan-ganda/:idsoal" element={<EditSoal />} />
+        <Route path="/kelola-konten" element={<DaftarKonten />} />
         <Route path="/daftar-nilai" element={<DaftarNilai />} />
         <Route path="/petunjuk/:id" element={<Pedoman />} />
         <Route path="/materi-ajar/:id" element={<MateriAjar />} />

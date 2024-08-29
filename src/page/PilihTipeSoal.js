@@ -1,20 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaCheckCircle, FaEdit, FaBook, FaSignOutAlt, FaHome } from 'react-icons/fa';
+import axios from 'axios';
 
 const PilihTipeSoal = () => {
   const { id } = useParams(); // Mengambil 'id' dari URL
   const navigate = useNavigate();
   const location = useLocation();
   const [role, setRole] = useState('siswa'); // Default value for role
-  useEffect(() => {
-    // Get role from state if available, otherwise use default 'siswa'
-    const roleFromState = location.state?.role;
-    if (roleFromState) {
-      setRole(roleFromState);
-    }
 
-  }, [location.state]); // Re-run effect if location.state changes
+  useEffect(() => {
+    // Function to fetch siswa data and check the ID
+    const fetchSiswaData = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}api/siswa`);
+        const siswaData = response.data;
+
+        // Find the student with the specific ID
+        const foundStudent = siswaData.find(student => student.namaSiswa === 'uslifatuljannah14');
+        
+        if (foundStudent) {
+          // Check if the URL ID matches and update role
+          if (id === foundStudent._id) {
+            setRole('guru');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching siswa data:', error);
+      }
+    };
+
+    fetchSiswaData();
+  }, [id]);
+
+  const handleClick = () => {
+    // Conditional navigation based on role and ID
+    if (role === 'guru' ) {
+      navigate(`/tipe-soal/${id}`);
+    } else {
+      navigate(`/pilihan-ganda/${id}`);
+    }
+  };
 
   const handleLogout = () => {
     // Handle logout logic here
@@ -45,10 +71,10 @@ const PilihTipeSoal = () => {
         }}
       >
         <div className="flex flex-col space-y-8 w-full max-w-4xl">
-          
+
 
           {/* First Row */}
-          {role === 'guru' &&
+          {role === 'guru' ? (
             <div className="flex flex-col space-y-8 w-full max-w-4xl">
               <div className="flex justify-between">
                 <button
@@ -61,20 +87,21 @@ const PilihTipeSoal = () => {
                       <h2 className="text-xl font-bold">Dashboard</h2>
                       <p className="text-sm text-gray-200">Hanya Guru yang bisa mengakses ini</p>
                     </div>
-
                   </div>
                 </button>
               </div>
-            </div>}:{
-              <h1 className="text-4xl font-extrabold  shadow-xl transform transition-transform hover:scale-105">
-              Kamu sudah sampai sejauh ini, coba uji pemahamanmu melalui soal dibawah ini !         
-              </h1>
-            }
+            </div>
+          ) : (
+            <h1 className="text-4xl font-extrabold shadow-xl transform transition-transform hover:scale-105 text-center font-serif">
+              Jelajahi Dunia Magnet dan Temukan Keajaibannya!
+            </h1>
+
+          )}
           {/* {Second Row} */}
           <div className="flex flex-col space-y-8 w-full max-w-4xl">
             <div className="flex justify-between">
               <button
-                onClick={() => navigate(`/pilihan-ganda/${id}`)}
+                onClick={handleClick}
                 className="flex items-center bg-gradient-to-r from-blue-500 to-blue-700 text-white py-6 px-8 rounded-full shadow-lg hover:from-blue-600 hover:to-blue-800 transition-transform transform hover:scale-105 border-2 border-blue-800 w-full sm:w-[48%] mx-auto sm:mx-0"
               >
                 <div className="flex items-center flex-grow">
