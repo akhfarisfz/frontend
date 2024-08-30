@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import stringSimilarity from 'string-similarity';
 import axios from 'axios';
-import Pusher from 'pusher-js';
 import { FaChevronLeft, FaChevronRight, FaHome, FaTimes } from 'react-icons/fa';
 
 const Essay = () => {
@@ -27,40 +26,18 @@ const Essay = () => {
           setQuestions(essayResponse.data.map(essay => essay.soal));
           setCorrectAnswers(essayResponse.data.map(essay => essay.kunci));
           setEssayId(essayResponse.data.map(essay => essay._id));
-
+  
           if (id) {
             const studentResponse = await axios.get(`${process.env.REACT_APP_API_URL}api/siswa/${id}`);
             if (studentResponse.data) {
               setStudentName(studentResponse.data.namaSiswa);
               const studentEssay = studentResponse.data.essay || [];
-
+  
               const hasSubmittedAnswer = studentEssay.some(answer => answer.soal._id === essayId[currentQuestionIndex]);
               setShowForm(true);
               setIsDisabled(hasSubmittedAnswer);
             }
           }
-          const allStudentsResponse = await axios.get(`${process.env.REACT_APP_API_URL}api/siswa`);
-          const allStudents = allStudentsResponse.data;
-
-          const filteredAnswers = allStudents
-            .map(student => {
-              const studentEssay = student.essay.find(essay => essay.soal === essayId[currentQuestionIndex]);
-              if (studentEssay) {
-                return {
-                  text: studentEssay.jawabanSiswa,
-                  similarity: studentEssay.skorEssay,
-                  idSoal: studentEssay.soal,
-                  namaSiswa: student.namaSiswa,
-                  studentId: student._id,
-                  color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-                  position: getRandomPosition(),
-                };
-              }
-              return null;
-            })
-            .filter(answer => answer !== null);
-
-          setAnswers(filteredAnswers);
         } else {
           console.warn('No data found');
         }
@@ -68,25 +45,42 @@ const Essay = () => {
         console.error('Error fetching essay data:', error);
       }
     };
-
-    fetchEssayData();
-
-    const pusher = new Pusher('eb9edb341b864a7ef56e', {
-      cluster: 'ap1',
-      useTLS: true,
-    });
-
-    const channel = pusher.subscribe('my-channel');
-    channel.bind('answerSubmitted', (data) => {
-      if (essayId.includes(data.soal)) {
-        setAnswers(prevAnswers => [...prevAnswers, { ...data, namaSiswa: data.namaSiswa }]);
+  
+    const fetchAnswers = async () => {
+      try {
+        const allStudentsResponse = await axios.get(`${process.env.REACT_APP_API_URL}api/siswa`);
+        const allStudents = allStudentsResponse.data;
+  
+        const filteredAnswers = allStudents
+          .map(student => {
+            const studentEssay = student.essay.find(essay => essay.soal === essayId[currentQuestionIndex]);
+            if (studentEssay) {
+              return {
+                text: studentEssay.jawabanSiswa,
+                similarity: studentEssay.skorEssay,
+                idSoal: studentEssay.soal,
+                namaSiswa: student.namaSiswa,
+                studentId: student._id,
+                color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                position: getRandomPosition(),
+              };
+            }
+            return null;
+          })
+          .filter(answer => answer !== null);
+  
+        setAnswers(filteredAnswers);
+      } catch (error) {
+        console.error('Error fetching answers:', error);
       }
-    });
-
-    return () => {
-      pusher.unsubscribe('my-channel');
     };
-  }, [id, currentQuestionIndex]); // Pastikan essayId tidak menyebabkan loop
+  
+    fetchEssayData();
+    fetchAnswers();
+  
+  }, [id, currentQuestionIndex, essayId[currentQuestionIndex]]); 
+  
+  
 
 
   const handleChange = (e) => {

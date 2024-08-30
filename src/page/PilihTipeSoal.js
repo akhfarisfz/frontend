@@ -6,7 +6,6 @@ import axios from 'axios';
 const PilihTipeSoal = () => {
   const { id } = useParams(); // Mengambil 'id' dari URL
   const navigate = useNavigate();
-  const location = useLocation();
   const [role, setRole] = useState('siswa'); // Default value for role
 
   useEffect(() => {
