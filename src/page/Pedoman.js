@@ -11,13 +11,12 @@ const Pedoman = () => {
   const navigate = useNavigate();
 
   const imageUrls = [
-    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F1.jpg?alt=media&token=268bcd87-bd24-4080-b82f-ec6cda9b94b1',
-    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F2.jpg?alt=media&token=268bcd87-bd24-4080-b82f-ec6cda9b94b1',
-    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F3.jpg?alt=media&token=268bcd87-bd24-4080-b82f-ec6cda9b94b1',
-    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F4.jpg?alt=media&token=268bcd87-bd24-4080-b82f-ec6cda9b94b1',
-    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F5.jpg?alt=media&token=268bcd87-bd24-4080-b82f-ec6cda9b94b1',
-    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F6.jpg?alt=media&token=268bcd87-bd24-4080-b82f-ec6cda9b94b1',
-    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F7.jpg?alt=media&token=268bcd87-bd24-4080-b82f-ec6cda9b94b1',
+    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F1.png?alt=media&token=b7ef9649-7a6a-406b-8d8b-02fdb50567d7',
+    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F2.png?alt=media&token=b7ef9649-7a6a-406b-8d8b-02fdb50567d7',
+    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F3.png?alt=media&token=b7ef9649-7a6a-406b-8d8b-02fdb50567d7',
+    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F4.png?alt=media&token=b7ef9649-7a6a-406b-8d8b-02fdb50567d7',
+    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F5.png?alt=media&token=b7ef9649-7a6a-406b-8d8b-02fdb50567d7',
+    'https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Pedoman%20Pembelajaran%2F6.png?alt=media&token=b7ef9649-7a6a-406b-8d8b-02fdb50567d7',
   ];
 
   useEffect(() => {
