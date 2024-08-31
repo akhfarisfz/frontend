@@ -16,6 +16,9 @@ const Essay = () => {
   const [studentName, setStudentName] = useState('');
   const [essayId, setEssayId] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isDisabledKey, setIsDisabledKey] = useState(false);
+  
+
   const { id } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
@@ -36,6 +39,7 @@ const Essay = () => {
               const hasSubmittedAnswer = studentEssay.some(answer => answer.soal._id === essayId[currentQuestionIndex]);
               setShowForm(true);
               setIsDisabled(hasSubmittedAnswer);
+              setIsDisabledKey(!hasSubmittedAnswer);
             }
           }
         } else {
@@ -90,48 +94,48 @@ const Essay = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (userAnswer.trim() === '') return;
-
+  
     const currentEssayId = essayId[currentQuestionIndex];
     const hasSubmittedAnswer = answers.some(answer => answer.soal === currentEssayId && answer.namaSiswa === studentName);
+    
     if (hasSubmittedAnswer) {
       console.warn('You have already submitted an answer for this question.');
       return;
     }
-
+  
     const similarity = stringSimilarity.compareTwoStrings(userAnswer, correctAnswers[currentQuestionIndex]);
     const color = `hsl(${Math.random() * 360}, 100%, 50%)`;
     const position = getRandomPosition();
-
+  
     const newAnswer = { text: userAnswer, similarity, color, position, namaSiswa: studentName };
     setAnswers([...answers, newAnswer]);
     setUserAnswer('');
     setIsDisabled(true);
-
+  
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}api/submitAnswer`, {
-        text: userAnswer,
-        similarity,
-        color,
-        position,
-        soal: essayId[currentQuestionIndex],
-        namaSiswa: studentName
-      });
-
+      // Ambil data siswa saat ini dari API
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}api/siswa/${id}`);
+      const siswaData = response.data;
+  
+      // Tambahkan entri baru ke array essay jika soal berbeda
+      const updatedEssayArray = siswaData.essay.filter(item => item.soal.toString() !== currentEssayId).concat([{
+        jawabanSiswa: userAnswer,
+        skorEssay: similarity,
+        soal: currentEssayId,
+      }]);
+  
+      // Kirim permintaan untuk memperbarui field essay dengan array yang telah diperbarui
       await axios.put(`${process.env.REACT_APP_API_URL}api/siswa/${id}`, {
-        essay: [
-          {
-            jawabanSiswa: userAnswer,
-            skorEssay: similarity,
-            soal: essayId[currentQuestionIndex],
-          },
-        ],
+        essay: updatedEssayArray
       });
-
+  
       setShowForm(true);
+      window.location.reload();
     } catch (error) {
       console.error('Error posting user answer:', error);
     }
   };
+  
 
   const handleShowAnswerKey = async () => {
     setShowAnswerKey(true);
@@ -156,26 +160,35 @@ const Essay = () => {
       setShowAnswerKey(false);
     }
   };
-  const handleDelete = async (studentId) => {
+  const handleDelete = async (studentId, essayID) => {
     // Konfirmasi penghapusan
-    if (window.confirm(`Anda yakin ingin menghapus semua jawaban untuk studentId: ${studentId}?`)) {
+    if (window.confirm(`Anda yakin ingin menghapus jawaban dengan EssayID: ${essayID} untuk studentId: ${studentId}?`)) {
       try {
-        // Kirim permintaan untuk memperbarui field essay menjadi array kosong
-        await axios.put(`${process.env.REACT_APP_API_URL}api/siswa/${studentId}`, {
-          essay: []  // Set field essay menjadi array kosong
-        });
+        // Ambil data siswa saat ini
+        const { data: student } = await axios.get(`${process.env.REACT_APP_API_URL}api/siswa/${studentId}`);
+        console.log('Data siswa:', student);
   
+        // Filter berdasarkan _id dari essay
+        const updatedEssay = student.essay.filter(essay => essay.soal._id !== essayID);
+  
+        // Kirim permintaan untuk memperbarui field essay
+        await axios.put(`${process.env.REACT_APP_API_URL}api/siswa/${studentId}`, {
+          essay: updatedEssay
+        });
+        
         // Hapus jawaban dari state lokal setelah penghapusan berhasil
         setAnswers(prevAnswers =>
-          prevAnswers.filter(answer => answer.studentId !== studentId)
+          prevAnswers.filter(answer => answer.essayId !== essayID)
         );
-        setIsDisabled(false)
-        console.log(' jawaban berhasil dihapus');
+        setIsDisabled(false);
+        console.log('Jawaban berhasil dihapus');
       } catch (error) {
         console.error('Error menghapus jawaban:', error);
       }
     }
   };
+  
+  
   
 
 
@@ -229,6 +242,7 @@ const Essay = () => {
             </button>
             <button
               type="button"
+              disabled={isDisabledKey}
               onClick={handleShowAnswerKey}
               className="mt-4 bg-green-500 text-white p-2 rounded-md shadow hover:bg-green-600 transition"
             >
@@ -343,7 +357,7 @@ const Essay = () => {
               </div>
               {answer.studentId === id && (
                 <button
-                  onClick={() => handleDelete(id)}
+                  onClick={() => handleDelete(id,essayId[currentQuestionIndex])}
                   className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20" // Ensure the button is above other elements
                   style={{ border: '2px solid red', pointerEvents: 'auto' }} // Debug border and pointer events
                 >
