@@ -54,7 +54,7 @@ const Pedoman = () => {
       }}>
       {/* Fixed Header */}
       <header className="fixed top-0 left-0 w-full bg-teal-600 text-white py-4 px-6 shadow-md z-10">
-        <h1 className="text-xl md:text-3xl font-bold text-center">Pedoman Penggunaan Aplikasi Materi Magnetik</h1>
+        <h1 className="text-xl md:text-3xl font-bold text-center">Pedoman Praktikum</h1>
       </header>
 
       {/* Image Slider */}
