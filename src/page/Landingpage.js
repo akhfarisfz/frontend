@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaArrowDown } from 'react-icons/fa';
 
 function LandingPage() {
   const [username, setUsername] = useState('');
@@ -48,37 +48,104 @@ function LandingPage() {
   };
 
   return (
-    <div className="relative h-auto bg-gradient-to-r from-blue-300 via-green-300 to-yellow-300">
-      {/* Transparent Navbar */}
-      {/* <nav className="relative top-0 left-0 w-full bg-transparent text-white py-4 px-6 shadow-md z-20 flex justify-between items-center">
-        <div>
-          <a href="#section1" className="mr-4 hover:underline">Apa Itu Magnet?</a>
-          <a href="#section2" className="mr-4 hover:underline">Bagaimana Cara Kerja Magnet?</a>
-          <a href="#section3" className="hover:underline">Eksperimen Seru</a>
+    <div>
+      {/* Navbar Section */}
+      <div className="flex items-center justify-between bg-sky-100 p-4 shadow-lg">
+        <div className="flex items-center">
+          <img src="/experiential-learning.png" alt="Logo" className="w-12 h-12 mr-2" />
+          <h1 className="text-2xl font-bold text-gray-800">Experiental Learning</h1>
         </div>
-        <div>
+        <div className="flex space-x-4">
           <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
             onClick={handleStart}
-            className="bg-teal-500 text-white py-3 px-6 rounded-lg text-lg transition-transform transform hover:scale-105"
-          >
-            Mulai Belajar
-          </button>
-        </div>
-      </nav> */}
-
-      {/* Hero Section */}
-      <div className="flex items-center justify-center h-screen bg-white bg-opacity-60">
-        <div className="text-center p-6">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-800 mb-4">Selamat Datang di Pembelajaran Magnet!</h1>
-          <p className="text-lg md:text-2xl text-gray-700 mb-8">Dengan Experiential Learning, Temukan Keajaiban Magnet di Sekitar Kita.</p>
-          <button
-            onClick={handleStart}
-            className="bg-teal-500 text-white py-3 px-6 rounded-lg text-lg transition-transform transform hover:scale-105"
-          >
-            Mulai Belajar
-          </button>
+          >Mulai pengalamanmu</button>
         </div>
       </div>
+
+
+
+
+      <div className="min-h-screen flex flex-col-reverse items-center justify-between bg-sky-100 p-5 lg:flex-row xl:p-20 ">
+        <div className="lg:hidden flex justify-center">
+          <FaArrowDown className="text-gray-900 text-4xl animate-bounce" />
+        </div>
+        <div className="lg:max-w-xl">
+          <h1 className="text-5xl font-bold mb-4 text-gray-900">Pembelajaran Magnet</h1>
+          <p className="text-lg text-gray-700 mb-6">Mulai pengalamanmu dengan aplikasi kami dan pelajari semua tentang magnet dengan cara yang menyenangkan!</p>
+        </div>
+
+        <div>
+          <img src="/3616399-removebg-preview.png" alt="Hand holding phone" className="w-full max-w-lg" />
+        </div>
+
+      </div>
+
+      {/* Features Section */}
+      <div className="min-h-screen flex flex-col justify-center items-center bg-white shadow-lg">
+        <h2 className="text-5xl font-bold mb-8 text-center font-serif">Apa yang akan kamu pelajari?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full max-w-6xl my-20">
+          <div className="p-6 bg-gray-100 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-xl">
+            <img src="/4905784.jpg" alt="Video Pembelajaran" className="w-full h-48 object-cover rounded-md mb-4" />
+            <h3 className="text-2xl font-bold mb-2">Video Pembelajaran</h3>
+            <p className="text-md text-gray-700 mb-4">
+              Ayo tonton video pembelajaran yang penuh warna dan menarik tentang magnet.
+            </p>
+          </div>
+
+          <div className="p-6 bg-gray-100 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-xl">
+            <img src="/2438387.jpg" alt="Materi Menarik" className="w-full h-48 object-cover rounded-md mb-4" />
+            <h3 className="text-2xl font-bold mb-2">Eksperimen yang Asyik</h3>
+            <p className="text-lg text-gray-700 mb-4">
+              Kamu akan belajar tentang magnet dengan pengalaman yang baru!.
+            </p>
+          </div>
+
+          <div className="p-6 bg-gray-100 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-xl">
+            <img src="/5308579.jpg" alt="Tanya Jawab Interaktif" className="w-full h-48 object-cover rounded-md mb-4" />
+            <h3 className="text-2xl font-bold mb-2">Tanya Jawab Interaktif</h3>
+            <p className="text-lg text-gray-700 mb-4">
+              Kamu juga akan berlatih pemahamanmu dengan kelompok lain tentang magnet.
+            </p>
+          </div>
+        </div>
+      </div>
+
+
+
+      {/* Call to Action Section */}
+      <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100"style={{
+      backgroundImage: "url('https://firebasestorage.googleapis.com/v0/b/sddasanlekong.appspot.com/o/Science%20Laboratory%20Rules%20Educational%20Presentation%20in%20Blue%20and%20White%20Hand%20Drawn%20Style.png?alt=media&token=108417a0-6e78-434a-9731-33979bb93ee3')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    }}>
+
+        {/* Gambar besar di tengah */}
+        <div className="mb-8">
+          <img
+            src="/studying-woman-with-eyeglasses-isolated.png"
+            alt="Ilustrasi Belajar"
+            className="w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-lg object-cover rounded-lg"
+          />
+        </div>
+        <h2 className="text-3xl font-bold mb-4 text-white text-center">Tunggu apa lagi? Ayo mulai belajar sekarang!</h2>
+
+  
+        {/* Tombol Daftar Sekarang */}
+        <button
+          className="bg-teal-500 text-white py-3 px-6 rounded-lg text-lg transition-transform transform hover:scale-105 mb-4"
+          onClick={handleStart}
+        >
+          Mulai Belajar
+        </button>
+      </div>
+
+
+      {/* Footer Section */}
+      <footer className="bg-gray-800 text-white py-6 text-center">
+        <p>&copy; 2024 Ibu Uslifatul Cantik.</p>
+      </footer>
+
       {/* Login Modal */}
       {showLogin && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
@@ -90,7 +157,7 @@ function LandingPage() {
               <FaTimes className="text-2xl" />
             </button>
             <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">Masukkan Nama Kamu</h1>
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form className="space-y-6">
               <div>
                 <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                   Nama
@@ -102,19 +169,19 @@ function LandingPage() {
                   onChange={(e) => setUsername(e.target.value)}
                   required
                   placeholder="Masukkan nama lengkap"
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-teal-500 sm:text-sm transition-transform transform hover:scale-105"
+                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-2 px-4 rounded-md shadow-lg hover:bg-gradient-to-r hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-transform transform hover:scale-105"
+                className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-2 px-4 rounded-md shadow-lg"
+                onClick={handleLogin}
               >
                 Log in
               </button>
             </form>
 
-            {/* Show spinner during loading */}
             {loading && (
               <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70">
                 <div className="w-16 h-16 border-4 border-t-4 border-teal-500 border-solid rounded-full animate-spin"></div>
